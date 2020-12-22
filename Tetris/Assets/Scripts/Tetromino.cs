@@ -33,7 +33,11 @@ public class Tetromino : MonoBehaviour
             {
                 transform.position += new Vector3(-1, 0, 0);
             }*/
-            if(!CheckIsValidPosition())
+            if(CheckIsValidPosition())
+            {
+                FindObjectOfType<Game>().UpdateGrid(this);
+            }
+            else
             {
                 transform.position += new Vector3(-1, 0, 0);
             }
@@ -41,7 +45,11 @@ public class Tetromino : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.A))
         {
             transform.position += new Vector3(-1, 0, 0);
-            if(!CheckIsValidPosition())
+            if(CheckIsValidPosition())
+            {
+                FindObjectOfType<Game>().UpdateGrid(this);
+            }
+            else
             {
                 transform.position += new Vector3(1, 0, 0);
             }
@@ -65,7 +73,11 @@ public class Tetromino : MonoBehaviour
                 {
                     transform.Rotate(0, 0, 90);
                 }
-                if(!CheckIsValidPosition())
+                if(CheckIsValidPosition())
+                {
+                    FindObjectOfType<Game>().UpdateGrid(this);
+                }
+                else
                 {
                     if(limitRotation)
                     {
@@ -91,9 +103,15 @@ public class Tetromino : MonoBehaviour
         {
             transform.position += new Vector3(0, -1, 0);
             fall = Time.time;
-            if(!CheckIsValidPosition())
+            if(CheckIsValidPosition())
+            {
+                FindObjectOfType<Game>().UpdateGrid(this);
+            }
+            else
             {
                 transform.position += new Vector3(0, 1, 0);
+                enabled = false;
+                FindObjectOfType<Game>().SpawnNextTetromino();
             }
         }
     }
@@ -103,6 +121,10 @@ public class Tetromino : MonoBehaviour
         {
             Vector2 pos = FindObjectOfType<Game>().Round(mino.position);
             if(FindObjectOfType<Game>().CheckIsInsidegrid(pos) == false)
+            {
+                return false;
+            }
+            if(FindObjectOfType<Game>().GetTransformAtGridPosition(pos) != null && FindObjectOfType<Game>().GetTransformAtGridPosition(pos).parent != transform)
             {
                 return false;
             }
