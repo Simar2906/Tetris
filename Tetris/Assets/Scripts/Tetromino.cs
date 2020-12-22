@@ -6,6 +6,9 @@ public class Tetromino : MonoBehaviour
 {
     float fall = 0;
     public float fallSpeed = 1;
+
+    public bool allowRotation = true;
+    public bool limitRotation = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,11 +48,44 @@ public class Tetromino : MonoBehaviour
         }
         else if(Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W))
         {
-            transform.Rotate(0, 0, 90);
-            if(!CheckIsValidPosition())
+            if(allowRotation)
             {
-                transform.Rotate(0, 0, -90);
+                if(limitRotation)
+                {
+                    if(transform.rotation.eulerAngles.z>=90)
+                    {
+                        transform.Rotate(0,0,-90);
+                    }
+                    else
+                    {
+                        transform.Rotate(0, 0, 90);
+                    }
+                }
+                else
+                {
+                    transform.Rotate(0, 0, 90);
+                }
+                if(!CheckIsValidPosition())
+                {
+                    if(limitRotation)
+                    {
+                        if(transform.rotation.eulerAngles.z>=90)
+                        {
+                            transform.Rotate(0, 0, -90);
+                        }
+                        else
+                        {
+                            transform.Rotate(0, 0, 90);
+                        }
+                    }
+                    else
+                    {
+                        transform.Rotate(0, 0, -90);
+                    }
+                    
+                }
             }
+            
         }
         else if(Input.GetKeyDown(KeyCode.DownArrow)||Input.GetKeyDown(KeyCode.S)||(Time.time-fall >=fallSpeed))
         {
