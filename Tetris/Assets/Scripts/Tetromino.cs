@@ -9,13 +9,7 @@ public class Tetromino : MonoBehaviour
 
     public bool allowRotation = true;
     public bool limitRotation = false;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
         CheckUserInput();
@@ -25,14 +19,6 @@ public class Tetromino : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKeyDown(KeyCode.D))
         {
             transform.position += new Vector3(1, 0, 0);
-            /*if(CheckIsValidPosition())
-            {
-
-            }
-            else
-            {
-                transform.position += new Vector3(-1, 0, 0);
-            }*/
             if(CheckIsValidPosition())
             {
                 FindObjectOfType<Game>().UpdateGrid(this);
@@ -111,6 +97,10 @@ public class Tetromino : MonoBehaviour
             {
                 transform.position += new Vector3(0, 1, 0);
                 FindObjectOfType<Game>().DeleteRow();
+                if(FindObjectOfType<Game>().CheckIsAboveGrid(this))
+                {
+                    FindObjectOfType<Game>().GameOver();
+                }
                 enabled = false;
                 FindObjectOfType<Game>().SpawnNextTetromino();
             }

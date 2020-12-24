@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
@@ -8,12 +10,67 @@ public class Game : MonoBehaviour
     public static int gridWidth =10;
 
     public static Transform[,] grid = new Transform[gridWidth, gridHeight];
+
+    public int[] scoreLine =new int[5] {0, 40, 100, 300, 1200};
+    public int numberOfRowsThisTurn = 0;
+    public Text hud_score;
+    private int currentScore=0;
     // Start is called before the first frame update
     void Start()
     {
         SpawnNextTetromino();
     }
-
+    void Update() 
+    {
+        UpdateScore();
+        UpdateUI();
+        //Debug.Log(currentScore);
+    }
+    public void UpdateUI()
+    {
+        hud_score.text = currentScore.ToString();
+    }
+    public void UpdateScore()
+    {
+        if(numberOfRowsThisTurn>0)
+        {
+            switch(numberOfRowsThisTurn)
+            {
+                case 1:
+                    //Debug.Log("Cleared");
+                    ClearedOne();
+                    break;
+                case 2:
+                    //Debug.Log("Cleared");
+                    ClearedTwo();
+                    break;
+                case 3:
+                    ClearedThree();
+                    break;
+                case 4:
+                    ClearedFour();
+                    break;
+            }
+            
+        }
+        numberOfRowsThisTurn = 0;
+    }
+    public void ClearedOne()
+    {
+        currentScore += scoreLine[1];
+    }
+    public void ClearedTwo()
+    {
+        currentScore += scoreLine[2];
+    }
+    public void ClearedThree()
+    {
+        currentScore += scoreLine[3];
+    }
+    public void ClearedFour()
+    {
+        currentScore += scoreLine[4];
+    }
     public bool IsFullRowAt(int y)
     {
         for(int x = 0; x<gridWidth; ++x)
@@ -23,6 +80,9 @@ public class Game : MonoBehaviour
                 return false;
             }
         }
+        //since we found a full row, we will increment full row variable
+        numberOfRowsThisTurn += 1;
+        //Debug.Log(numberOfRowsThisTurn);
         return true;
     }
     public void DeleteMinoAt(int y)
@@ -66,6 +126,24 @@ public class Game : MonoBehaviour
             }
         }
     }
+
+    public bool CheckIsAboveGrid(Tetromino tetromino)
+    {
+        for(int x=0; x<gridWidth; x++)
+        {
+            foreach(Transform mino in tetromino.transform)
+            {
+                Vector2 pos = Round(mino.position);
+                if(pos.y > gridHeight-1)
+                {
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
+    
     public bool CheckIsInsidegrid(Vector2 pos)
     {
         return ((int)pos.x >= 0 && (int)pos.x < gridWidth && (int)pos.y >= 0);
@@ -148,4 +226,11 @@ public class Game : MonoBehaviour
             return grid[(int)pos.x, (int)pos.y];
         }
     }
+
+    public void GameOver()
+    {
+        SceneManager.LoadScene("GameOver");
+    }
+
+
 }
