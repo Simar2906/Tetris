@@ -157,11 +157,13 @@ public class Game : MonoBehaviour
     public void SpawnNextTetromino()
     {
         GameObject nextTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(5.0f, 20.0f),  Quaternion.identity);
+        //Debug.Log(nextTetromino.name);
     }
 
     private string GetRandomTetromino()
     {
         int randomTetromino = Random.Range(1,8);
+        Debug.Log("Loaded " + randomTetromino);
         string randomTetrominoName = "Prefabs/Tetromino_T";
         switch(randomTetromino)
         {

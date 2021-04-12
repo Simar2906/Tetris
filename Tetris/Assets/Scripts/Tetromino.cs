@@ -10,6 +10,9 @@ public class Tetromino : MonoBehaviour
     public bool allowRotation = true;
     public bool limitRotation = false;
 
+    public int individualScore = 100;
+    private float individualScoreTime;
+
     void Update()
     {
         CheckUserInput();
